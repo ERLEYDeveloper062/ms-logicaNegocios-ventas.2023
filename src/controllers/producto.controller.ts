@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication/dist/decorators';
 import {
   Count,
   CountSchema,
@@ -11,6 +12,7 @@ import {
   getModelSchemaRef, param, patch, post, put, requestBody,
   response
 } from '@loopback/rest';
+import {ConfiguracionSeguridad} from '../config/configuracion.seguridad';
 import {Producto} from '../models';
 import {ProductoRepository} from '../repositories';
 
@@ -51,6 +53,11 @@ export class ProductoController {
   ): Promise<Count> {
     return this.productoRepository.count(where);
   }
+
+  @authenticate({
+    strategy: "auth",
+    options: [ConfiguracionSeguridad.menuProductoId, ConfiguracionSeguridad.listarAccion]
+  })
 
   @get('/productos')
   @response(200, {
